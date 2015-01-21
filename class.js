@@ -101,9 +101,10 @@ child_3.anotherBehavior(); // initVar, also inherit parent instance variable
 /**
  * #4 Share prototpye
  *
+ * pros:
+ *   - doesn't inherit parent instance variable
  * cons: 
  *   - modify child protype would affect parent's as well
- *   - doesn't inherit parent instance variable
  *
  */
 console.log('\n');
@@ -122,7 +123,7 @@ child_4.anotherBehavior(); // undefined
 console.log('child_4 DOESNT inherit parent instance variable');
 
 ChildClass4.prototype.behavior = function () {
-  console.log('Overwrite child behavior also effect parent\'s');
+  console.log('Overwrite by ChildClass4');
 }
 parent.behavior();
 
