@@ -36,7 +36,7 @@ var parent = new MyClass('param1', 'param2');
 console.log('********\n* #1 prototype as new Parent\n********');
 (function (c, p) {
  c.prototype = new p();
-})(ChildClass, MyClass)
+}(ChildClass, MyClass));
 
 function ChildClass () {};
 
@@ -162,8 +162,8 @@ console.log('child_5.constructor:', child_5.constructor);
  * best solution
  *
  */
- console.log('\n');
- console.log('********\n* #6 Holy Grail, Fix cautions of #5\n********');
+console.log('\n');
+console.log('********\n* #6 Holy Grail, Fix cautions of #5\n********');
 
 // inherit function
 //
@@ -176,7 +176,7 @@ var inherit = (function () {
     C.prototype.constructor = C;
     return C;
   }
-})();
+}());
 
 function ChildClass6() {
   ChildClass6.__super__.constructor.apply(this, arguments);
@@ -193,3 +193,42 @@ var child_6 = new ChildClass6('child_6_param1', 'child_6_param2');
 console.log('child_6.constructor:', child_6.constructor);
 parent.behavior();
 child_6.behavior();
+
+/**
+ * #7 Without proxy function
+ *
+ * using ES5 Object.create
+ *
+ */
+console.log('\n********\n* #7 Using ES5 Object.create\n********');
+
+var inheritObj = (function () {
+  return function (C, P) {
+    // duplicate P.prototype
+    // also set constructor
+    C.prototype = Object.create(P.prototype, {
+      constructor: {
+        value: C,
+        enumerable: false, // means this attr won't show when log it
+        writable: true,
+        configurable: true // i.e possible to delete
+      }
+    });
+    C.__super__ = P;
+  }
+}());
+
+function ChildClass7() {
+  ChildClass7.__super__.apply(this, arguments)
+}
+
+inheritObj(ChildClass7, MyClass);
+
+ChildClass7.prototype.behavior = function () {
+  console.log('Overwriten by ChildClass7');
+}
+
+var child_7 = new ChildClass7('child_7_param1', 'child_7_param2');
+child_7.behavior();
+console.log('child_7 constructor:', child_7.constructor);
+parent.behavior();
