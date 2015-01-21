@@ -168,18 +168,18 @@ console.log('child_5.constructor:', child_5.constructor);
 // inherit function
 //
 var inherit = (function () {
-  return function (child, parent) {
+  return function (C, P) {
     function ctor() {}
-    ctor.prototype = parent.prototype;
-    child.prototype = new ctor();
-    child.prototype.__super__ = parent;
-    child.prototype.constructor = child;
-    return child;
+    ctor.prototype = P.prototype;
+    C.prototype = new ctor();
+    C.__super__ = P.prototype;
+    C.prototype.constructor = C;
+    return C;
   }
 })();
 
 function ChildClass6() {
-  this.__super__.apply(this, arguments);
+  ChildClass6.__super__.constructor.apply(this, arguments);
 }
 
 inherit(ChildClass6, MyClass);
@@ -189,5 +189,7 @@ ChildClass6.prototype.behavior = function () {
 }
 
 var child_6 = new ChildClass6('child_6_param1', 'child_6_param2');
+
+console.log('child_6.constructor:', child_6.constructor);
 parent.behavior();
 child_6.behavior();
